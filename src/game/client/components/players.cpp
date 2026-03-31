@@ -1757,19 +1757,18 @@ void CPlayers::AvoidFreezeLogic()
 {
 	if(!g_Config.m_ClTriggerRescue) return;
 
-	CCharacterCore *pCore = &Client()->m_PredictedChar;
+	CCharacterCore *pCore = &m_pClient->m_PredictedChar;
 
-	if(pCore->m_Vel.y > 5.0f && !Client()->m_Controls.m_InputData.m_Hook)
+	if(pCore->m_Vel.y > 5.0f && !m_pClient->m_Controls.m_InputData.m_Hook)
 	{
 		vec2 CheckPos = pCore->m_Pos + vec2(0, 64);
-		int Tile = Client()->m_Collision.GetCollisionAt(CheckPos.x, CheckPos.y);
+		int Tile = m_pClient->m_Collision.GetCollisionAt(CheckPos.x, CheckPos.y);
 
 		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
 		{
-			Client()->m_Controls.m_InputData.m_Hook = 1;
-			Client()->m_Controls.m_InputData.m_TargetX = 0;
-			Client()->m_Controls.m_InputData.m_TargetY = -100;
+			m_pClient->m_Controls.m_InputData.m_Hook = 1;
+			m_pClient->m_Controls.m_InputData.m_TargetX = 0;
+			m_pClient->m_Controls.m_InputData.m_TargetY = -100;
 		}
 	}
 }
-
