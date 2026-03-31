@@ -1764,14 +1764,13 @@ void CPlayers::AvoidFreezeLogic()
 	if(pCore->m_Vel.y > 5.0f)
 	{
 		vec2 CheckPos = pCore->m_Pos + vec2(0, 64);
-		// Используем Collision() через метод, а не напрямую
 		int Tile = pGC->Collision()->GetCollisionAt(CheckPos.x, CheckPos.y);
 
 		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
 		{
-			// Прямая манипуляция через селектор компонентов
-			pGC->m_Controls.m_InputData.m_Hook = 1;
-			pGC->m_Controls.m_InputData.m_TargetY = -100;
+			// Используем m_Input вместо m_InputData
+			pGC->m_Controls.m_Input.m_Hook = 1;
+			pGC->m_Controls.m_Input.m_TargetY = -100;
 		}
 	}
 }
