@@ -2,6 +2,7 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 
 #include "players.h"
+#include <game/client/gameclient.h>
 
 #include <base/color.h>
 #include <base/math.h>
