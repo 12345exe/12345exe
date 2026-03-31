@@ -1758,19 +1758,20 @@ void CPlayers::AvoidFreezeLogic()
 {
 	if(!g_Config.m_ClTriggerRescue) return;
 
-	CGameClient *pGameClient = (CGameClient *)m_pClient;
-	CCharacterCore *pCore = &pGameClient->m_PredictedChar;
+	CGameClient *pGC = (CGameClient *)GameClient();
+	CCharacterCore *pCore = &pGC->m_PredictedChar;
 
-	if(pCore->m_Vel.y > 5.0f && !pGameClient->m_Controls.m_InputData.m_Hook)
+	if(pCore->m_Vel.y > 5.0f)
 	{
 		vec2 CheckPos = pCore->m_Pos + vec2(0, 64);
-		int Tile = pGameClient->m_Collision.GetCollisionAt(CheckPos.x, CheckPos.y);
+		// Используем Collision() через метод, а не напрямую
+		int Tile = pGC->Collision()->GetCollisionAt(CheckPos.x, CheckPos.y);
 
 		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
 		{
-			pGameClient->m_Controls.m_InputData.m_Hook = 1;
-			pGameClient->m_Controls.m_InputData.m_TargetX = 0;
-			pGameClient->m_Controls.m_InputData.m_TargetY = -100;
+			// Прямая манипуляция через селектор компонентов
+			pGC->m_Controls.m_InputData.m_Hook = 1;
+			pGC->m_Controls.m_InputData.m_TargetY = -100;
 		}
 	}
 }
