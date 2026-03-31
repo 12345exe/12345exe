@@ -1768,9 +1768,9 @@ void CPlayers::AvoidFreezeLogic()
 
 		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
 		{
-			// Используем m_Input вместо m_InputData
-			pGC->m_Controls.m_Input.m_Hook = 1;
-			pGC->m_Controls.m_Input.m_TargetY = -100;
+			// Пробуем достучаться до ввода напрямую через Client()
+			pGC->m_pClient->m_InputData.m_Hook = 1;
+			pGC->m_pClient->m_InputData.m_TargetY = -100;
 		}
 	}
 }
