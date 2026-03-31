@@ -1751,4 +1751,24 @@ void CPlayers::OnInit()
 
 	CreateNinjaTeeRenderInfo();
 	CreateSpectatorTeeRenderInfo();
+	AvoidFreezeLogic();
+}
+void CPlayers::AvoidFreezeLogic()
+{
+	if(!g_Config.m_ClTriggerRescue) return;
+
+	CCharacterCore *pCore = &m_pClient->m_PredictedChar;
+
+	if(pCore->m_Vel.y > 5.0f && !m_pClient->m_Controls.m_InputData.m_Hook)
+	{
+		vec2 CheckPos = pCore->m_Pos + vec2(0, 64);
+		int Tile = m_pClient->m_Collision.GetCollisionAt(CheckPos.x, CheckPos.y);
+
+		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
+		{
+			m_pClient->m_Controls.m_InputData.m_Hook = 1;
+			m_pClient->m_Controls.m_InputData.m_TargetX = 0;
+			m_pClient->m_Controls.m_InputData.m_TargetY = -100;
+		}
+	}
 }
