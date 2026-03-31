@@ -1751,7 +1751,7 @@ void CPlayers::OnInit()
 
 	CreateNinjaTeeRenderInfo();
 	CreateSpectatorTeeRenderInfo();
-	AvoidFreezeLogic()
+	AvoidFreezeLogic();
 }
 void CPlayers::AvoidFreezeLogic()
 {
