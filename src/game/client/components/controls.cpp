@@ -254,6 +254,36 @@ int CControls::SnapInput(int *pData)
 	}
 	else
 	{
+				// TClient Saiko Avoid Freeze
+		if(g_Config.m_ClTriggerRescue && GameClient()->m_Snap.m_pLocalCharacter)
+		{
+			CNetObj_Character *pChar = GameClient()->m_Snap.m_pLocalCharacter;
+			vec2 LocalPos = vec2(pChar->m_X, pChar->m_Y);
+			vec2 LocalVel = vec2(pChar->m_VelX / 256.0f, pChar->m_VelY / 256.0f);
+
+			vec2 FuturePos = LocalPos + LocalVel * 1.5f;
+			int Tile = Collision()->GetCollisionAt(FuturePos.x, FuturePos.y);
+
+			if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
+			{
+				m_FastInputHookAction = true;
+				m_aInputData[g_Config.m_ClDummy].m_Hook = 1;
+				
+				for(int angle = 0; angle < 360; angle += 45)
+				{
+					float Rad = angle * (3.14159f / 180.0f);
+					vec2 Dir = vec2(cos(Rad), sin(Rad));
+					vec2 HitPos;
+					if(Collision()->IntersectLine(LocalPos, LocalPos + Dir * 450.0f, &HitPos, NULL))
+					{
+						m_aInputData[g_Config.m_ClDummy].m_TargetX = (int)(HitPos.x - LocalPos.x);
+						m_aInputData[g_Config.m_ClDummy].m_TargetY = (int)(HitPos.y - LocalPos.y);
+						break;
+					}
+				}
+			}
+		}
+
 		// TClient
 		vec2 Pos;
 		if(g_Config.m_ClSubTickAiming && m_aMousePosOnAction[g_Config.m_ClDummy] != vec2(0.0f, 0.0f))
