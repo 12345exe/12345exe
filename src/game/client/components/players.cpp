@@ -1752,34 +1752,5 @@ void CPlayers::OnInit()
 
 	CreateNinjaTeeRenderInfo();
 	CreateSpectatorTeeRenderInfo();
-	AvoidFreezeLogic();
-}
-void CPlayers::AvoidFreezeLogic()
-{
-	if(!g_Config.m_ClTriggerRescue) return;
-
-	CGameClient *pGC = (CGameClient *)GameClient();
-	CCharacterCore *pCore = &pGC->m_PredictedChar;
-
-	if(pCore->m_Vel.y > 5.0f)
-	{
-		vec2 CheckPos = pCore->m_Pos + vec2(0, 64);
-		int Tile = pGC->Collision()->GetCollisionAt(CheckPos.x, CheckPos.y);
-
-		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
-		{
-			// Используем правильные имена из твоего controls.h
-			pGC->m_Controls.m_FastInputHookAction = true;
-			pGC->m_Controls.m_aFastInput[0].m_Hook = 1;
-			pGC->m_Controls.m_aFastInput[0].m_TargetY = -100;
-
-			pGC->m_Controls.m_aInputData[0].m_Hook = 1;
-			pGC->m_Controls.m_aInputData[0].m_TargetY = -100;
-		}
-		else
-		{
-			// Выключаем FastInput, когда опасности нет
-			pGC->m_Controls.m_FastInputHookAction = false;
-		}
-	}
+	
 }
