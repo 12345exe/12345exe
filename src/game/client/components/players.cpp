@@ -1754,19 +1754,32 @@ void CPlayers::OnInit()
 	CreateSpectatorTeeRenderInfo();
 	AvoidFreezeLogic();
 }
-if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
+void CPlayers::AvoidFreezeLogic()
 {
-    // 1. Пытаемся нажать через обычный ввод
-    pGC->m_Controls.m_aInputData[0].m_Hook = 1;
-    pGC->m_Controls.m_aInputData[0].m_TargetY = -100;
+	if(!g_Config.m_ClTriggerRescue) return;
 
-    // 2. TClient-специфика: активируем FastInput, чтобы тач не сбросил нажатие
-    pGC->m_Controls.m_FastInputHookAction = true;
-    pGC->m_Controls.m_aFastInput[0].m_Hook = 1;
-    pGC->m_Controls.m_aFastInput[0].m_TargetY = -100;
-}
-else
-{
-    // Важно сбрасывать FastInput, когда мы НЕ в опасности
-    pGC->m_Controls.m_FastInputHookAction = false;
+	CGameClient *pGC = (CGameClient *)GameClient();
+	CCharacterCore *pCore = &pGC->m_PredictedChar;
+
+	if(pCore->m_Vel.y > 5.0f)
+	{
+		vec2 CheckPos = pCore->m_Pos + vec2(0, 64);
+		int Tile = pGC->Collision()->GetCollisionAt(CheckPos.x, CheckPos.y);
+
+		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
+		{
+			// Используем правильные имена из твоего controls.h
+			pGC->m_Controls.m_FastInputHookAction = true;
+			pGC->m_Controls.m_aFastInput[0].m_Hook = 1;
+			pGC->m_Controls.m_aFastInput[0].m_TargetY = -100;
+
+			pGC->m_Controls.m_aInputData[0].m_Hook = 1;
+			pGC->m_Controls.m_aInputData[0].m_TargetY = -100;
+		}
+		else
+		{
+			// Выключаем FastInput, когда опасности нет
+			pGC->m_Controls.m_FastInputHookAction = false;
+		}
+	}
 }
