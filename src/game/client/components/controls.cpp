@@ -257,7 +257,7 @@ int CControls::SnapInput(int *pData)
 				// TClient Saiko Avoid Freeze
 		if(g_Config.m_ClTriggerRescue && GameClient()->m_Snap.m_pLocalCharacter)
 		{
-			CNetObj_Character *pChar = GameClient()->m_Snap.m_pLocalCharacter;
+			const CNetObj_Character *pChar = GameClient()->m_Snap.m_pLocalCharacter;
 			vec2 LocalPos = vec2(pChar->m_X, pChar->m_Y);
 			vec2 LocalVel = vec2(pChar->m_VelX / 256.0f, pChar->m_VelY / 256.0f);
 
