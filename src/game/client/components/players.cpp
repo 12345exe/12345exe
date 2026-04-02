@@ -1768,9 +1768,9 @@ void CPlayers::AvoidFreezeLogic()
 
 		if(Tile & TILE_FREEZE || Tile & TILE_DEATH)
 		{
-			// Используем легальный путь к вводу через Client()
-			pGC->m_Controls.m_InputData.m_Hook = 1;
-			pGC->m_Controls.m_InputData.m_TargetY = -100;
+			// Исправлено: обращаемся к нулевому индексу массива m_aInputData
+			pGC->m_Controls.m_aInputData[0].m_Hook = 1;
+			pGC->m_Controls.m_aInputData[0].m_TargetY = -100;
 		}
 	}
 }
